@@ -119,8 +119,7 @@
     if (!current) return;
     $("btn-share-x").href = xIntentUrl(shareText(type), url, hashtags());
     $("btn-share-copy").hidden = !url;
-    $("share-note").textContent = url ? "リンクで共有されるのはサメのタイプだけです。"
-      : "ローカル版ではサメのタイプを文章でシェアできます。カードは画像として保存できます。";
+    $("share-note").hidden = !!url;
   }
 
   SA.share = {
