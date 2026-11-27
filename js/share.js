@@ -101,12 +101,41 @@
     });
   }
 
+  async function prepareFile(result) {
+    var button = $("btn-share-file");
+    if (!button) return;
+    button.hidden = true;
+    if (!result || !navigator.share || !navigator.canShare || typeof File === "undefined" || !SA.shareCard?.imageFile) return;
+    try {
+      var file = await SA.shareCard.imageFile(result.code);
+      if (!file || current !== result) return;
+      var parts = [shareText(result.type), hashtags().map(function (tag) { return "#" + tag; }).join(" "), shareUrl(result.code)];
+      var data = { files: [file], text: parts.filter(Boolean).join("\n") };
+      if (navigator.canShare(data)) {
+        result.fileShare = data;
+        button.hidden = false;
+      }
+    } catch (e) {
+      // If the browser cannot prepare a PNG, the X link and download stay available.
+    }
+  }
+
+  async function onShareFile() {
+    if (!current || !current.fileShare) return;
+    try {
+      await navigator.share(current.fileShare);
+    } catch (e) {
+      if (e.name !== "AbortError") toast("画像を共有できませんでした。「画像を保存」から保存できます。");
+    }
+  }
+
   function bind() {
     if (bound) return;
     bound = true;
     $("btn-share-copy").addEventListener("click", onCopy);
     $("btn-share-image").addEventListener("click", onImage);
-
+    var fileButton = $("btn-share-file");
+    if (fileButton) fileButton.addEventListener("click", onShareFile);
   }
 
   /* 結果画面から呼ばれる */
@@ -116,6 +145,7 @@
     current = SA.engine && SA.engine.isValidCode(code) && type ? { code: code, type: type } : null;
     var url = current && shareUrl(code);
     $("share").hidden = !current;
+    prepareFile(current);
     if (!current) return;
     $("btn-share-x").href = xIntentUrl(shareText(type), url, hashtags());
     $("btn-share-copy").hidden = !url;

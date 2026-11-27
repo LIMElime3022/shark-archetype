@@ -22,9 +22,19 @@
         if (canvas.dataset.cardPath === path) canvas.getContext("2d").drawImage(img, 0, 0, W, H);
         resolve(canvas);
       };
-      img.onerror = function () { resolve(canvas); };
+      img.onerror = function () {
+        if (canvas.dataset.cardPath === path) canvas.dataset.cardPath = "";
+        resolve(canvas);
+      };
       img.src = path;
     });
+  }
+
+  async function imageFile(code) {
+    var canvas = await render(code);
+    if (!canvas.dataset.cardPath) return null;
+    var blob = await new Promise(function (resolve) { canvas.toBlob(resolve, "image/png"); });
+    return blob ? new File([blob], "shark-archetype-" + code + ".png", { type: "image/png" }) : null;
   }
 
   function download(code) {
@@ -39,5 +49,5 @@
     return Promise.resolve("ok");
   }
 
-  SA.shareCard = { render: render, download: download, WIDTH: W, HEIGHT: H };
+  SA.shareCard = { render: render, imageFile: imageFile, download: download, WIDTH: W, HEIGHT: H };
 })();
