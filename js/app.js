@@ -67,6 +67,12 @@
       var key = make("span", "opt-key", String(i + 1));
       key.setAttribute("aria-hidden", "true");
       b.appendChild(key);
+      b.addEventListener("pointermove", function (event) {
+        b.classList.toggle("mouse-hover", event.pointerType === "mouse");
+      });
+      b.addEventListener("pointerdown", function (event) {
+        if (event.pointerType !== "mouse") b.classList.remove("mouse-hover");
+      });
       b.addEventListener("click", function () { answer(c.value); });
       box.appendChild(b);
       optButtons.push({ el: b, value: c.value });
@@ -78,7 +84,10 @@
     var i = state.idx, q = questions[i], cur = state.answers[i];
     $("q-num").textContent = String(i + 1);
     $("q-text").textContent = q.text;
-    optButtons.forEach(function (o) { o.el.setAttribute("aria-pressed", o.value === cur ? "true" : "false"); });
+    optButtons.forEach(function (o) {
+      o.el.classList.remove("mouse-hover");
+      o.el.setAttribute("aria-pressed", o.value === cur ? "true" : "false");
+    });
     $("btn-back").disabled = i === 0;
 
     var d = depthAt(i);
