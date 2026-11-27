@@ -1,4 +1,4 @@
-/* 共有リンクには許可されたサメのコードだけを含める。 */
+/* 共有先は診断トップ。診断結果は投稿文と画像に含める。 */
 (function () {
   "use strict";
   var SA = (window.SharkArchetype = window.SharkArchetype || {});
@@ -23,7 +23,7 @@
 
   function shareUrl(code, c) {
     var base = siteUrl(c);
-    return base && SA.engine.isValidCode(code) ? base + "r/" + code + ".html" : null;
+    return base && SA.engine.isValidCode(code) ? base : null;
   }
 
   function hashtags(c) {
@@ -102,30 +102,40 @@
   }
 
   async function prepareFile(result) {
-    var button = $("btn-share-file");
-    if (!button) return;
-    button.hidden = true;
-    if (!result || !navigator.share || !navigator.canShare || typeof File === "undefined" || !SA.shareCard?.imageFile) return;
+    var button = $("btn-share-x");
+    button.disabled = false;
+    if (!navigator.share || !navigator.canShare || typeof File === "undefined" || !SA.shareCard?.imageFile) return;
+    button.disabled = true;
+    // A slow card download must not leave the X composer inaccessible.
+    function enableButton() { if (current === result) button.disabled = false; }
+    var timeout = setTimeout(enableButton, 5000);
     try {
       var file = await SA.shareCard.imageFile(result.code);
       if (!file || current !== result) return;
       var parts = [shareText(result.type), hashtags().map(function (tag) { return "#" + tag; }).join(" "), shareUrl(result.code)];
       var data = { files: [file], text: parts.filter(Boolean).join("\n") };
-      if (navigator.canShare(data)) {
-        result.fileShare = data;
-        button.hidden = false;
-      }
+      if (navigator.canShare(data)) result.fileShare = data;
     } catch (e) {
-      // If the browser cannot prepare a PNG, the X link and download stay available.
+      // The X composer also works without a prepared file.
+    } finally {
+      clearTimeout(timeout);
+      enableButton();
     }
   }
 
-  async function onShareFile() {
-    if (!current || !current.fileShare) return;
+  async function onShareX() {
+    var result = current;
+    if (!result) return;
+    if (!result.fileShare) {
+      window.open(result.xIntent, "_blank", "noopener,noreferrer");
+      return;
+    }
     try {
-      await navigator.share(current.fileShare);
+      await navigator.share(result.fileShare);
     } catch (e) {
-      if (e.name !== "AbortError") toast("画像を共有できませんでした。「画像を保存」から保存できます。");
+      if (e.name === "AbortError" || result !== current) return;
+      result.fileShare = null;
+      toast("画像を共有できませんでした。もう一度押すとXの投稿画面を開きます。");
     }
   }
 
@@ -134,8 +144,7 @@
     bound = true;
     $("btn-share-copy").addEventListener("click", onCopy);
     $("btn-share-image").addEventListener("click", onImage);
-    var fileButton = $("btn-share-file");
-    if (fileButton) fileButton.addEventListener("click", onShareFile);
+    $("btn-share-x").addEventListener("click", onShareX);
   }
 
   /* 結果画面から呼ばれる */
@@ -145,9 +154,9 @@
     current = SA.engine && SA.engine.isValidCode(code) && type ? { code: code, type: type } : null;
     var url = current && shareUrl(code);
     $("share").hidden = !current;
-    prepareFile(current);
     if (!current) return;
-    $("btn-share-x").href = xIntentUrl(shareText(type), url, hashtags());
+    current.xIntent = xIntentUrl(shareText(type), url, hashtags());
+    prepareFile(current);
     $("btn-share-copy").hidden = !url;
     $("share-note").hidden = !!url;
   }

@@ -9,7 +9,7 @@
     location.replace(publicSite + result);
   }
   SA.config = {
-    SITE_URL: oldEntry ? publicSite : "",
+    SITE_URL: typeof location !== "undefined" && location.protocol === "https:" ? publicSite : "",
     SHARE_TEXT: "わたしに似たサメは「{shark}」でした。\n{persona}",
     SHARE_HASHTAGS: ["サメ性格診断"]
   };
