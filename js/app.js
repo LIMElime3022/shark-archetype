@@ -34,8 +34,6 @@
   function show(name) {
     Object.keys(views).forEach(function (k) { views[k].hidden = k !== name; });
     gauge.hidden = name !== "quiz";
-    document.body.dataset.view = name;
-    if (sea.setActive) sea.setActive(name === "quiz");
     window.scrollTo(0, 0);
   }
 
@@ -228,7 +226,6 @@
       $("r-buddy-name").textContent = buddy.shark + "タイプ";
     }
 
-    $("btn-retry").textContent = result ? "もう一度診断する" : "自分も診断する";
     show("result");
     renderAxes(code, result);
     renderShare(code, t);
@@ -238,6 +235,7 @@
     fx.scramble($("r-code"), code, axes.map(function (a) { return a.a.code + a.b.code; }).join(""));
     fx.scramble($("r-name"), t.shark, "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン");
 
+    fx.tilt($("r-hero"));
     $("r-heading").focus({ preventScroll: true });
   }
 
@@ -266,9 +264,10 @@
 
   /* ---- 始める ---- */
   buildOptions();
+  putShark("start-shark", engine.isValidCode(SA.sharkStart) ? SA.sharkStart : "SDEAM", "", true);
   $("btn-start").addEventListener("click", startQuiz);
   $("btn-back").addEventListener("click", back);
-  $("btn-retry").addEventListener("click", startQuiz);
+  $("btn-retry").addEventListener("click", goStart);
 
   document.addEventListener("keydown", function (e) {
     if (document.querySelector("dialog[open]") || e.repeat || views.quiz.hidden || e.ctrlKey || e.metaKey || e.altKey) return;

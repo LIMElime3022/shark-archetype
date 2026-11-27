@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- 外部からの読み込みと外部への送信を止める決まり。このフォルダー内のファイルだけを使う。 -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
-<meta name="color-scheme" content="light">
-<meta name="theme-color" content="#faf9f4">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#084a7c">
 <meta name="referrer" content="no-referrer">
 <title>サメ性格診断 | Shark Archetype</title>
 <meta name="description" content="30の問いに答えながら深海へ潜っていくと、あなたに似たサメが見つかる性格診断。全32タイプ。">
@@ -22,17 +22,7 @@
 <link rel="icon" href="img/sharks/SDEAM.webp" type="image/webp">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-view="start">
-<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><symbol id="ic-book" viewBox="0 0 24 24"><path d="M3 5q5-2 9 1 4-3 9-1v14q-5-2-9 1-4-3-9-1zM12 6v14"/></symbol><symbol id="ic-about" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-9v.3"/></symbol><symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.6 2"/></symbol><symbol id="ic-sheet" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6m-6 4h6m-6 4h3"/></symbol><symbol id="ic-wave" viewBox="0 0 24 24"><path d="M2 9q2.5 3.2 5 0t5 0 5 0 5 0M2 15q2.5 3.2 5 0t5 0 5 0 5 0"/></symbol><symbol id="ic-play" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M7 3.8q0-.8.8-.3l12 8q.7.5 0 1l-12 8q-.8.5-.8-.3z"/></symbol><symbol id="ic-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/></symbol><symbol id="ic-x" viewBox="0 0 24 24"><path d="M4 4h4.6L20 20h-4.6zM19.8 4l-6.3 7.2M4.2 20l6.3-7.2"/></symbol></defs></svg>
-<header class="mast">
-  <div class="mast-inner">
-    <a class="brand" href="./index.html" aria-label="サメ性格診断 トップ"><img src="img/sharks/SDEAM.webp" alt="" width="58" height="38"><span>サメ性格診断<small>SHARK ARCHETYPE</small></span></a>
-    <nav aria-label="メインメニュー">
-      <a id="guide-link" href="#guide"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#ic-book"/></svg>サメ図鑑</a>
-      <button type="button" id="about-open"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#ic-about"/></svg>診断について</button>
-    </nav>
-  </div>
-</header>
+<body>
 
 <!-- 背景（海）。飾りなので読み上げない。 -->
 <div class="sea" aria-hidden="true">
@@ -48,28 +38,20 @@
 <main>
   <!-- 開始 -->
   <section class="view view-start" id="v-start">
-    <div class="cover">
-      <img class="cover-art" src="img/hero.webp" alt="光の差す水中で、丸い頬のホホジロザメがこちらを向いて泳いでいる" fetchpriority="high" width="1942" height="809">
-      <div class="cover-copy">
-        <p class="overline"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#ic-wave"/></svg> SHARK PERSONALITY QUIZ</p>
-        <h1>あなたは、<br>どんなサメ<span>？</span></h1>
-        <p class="cover-intro">30の質問に答えて、32種類のサメから<br>あなたに似た一匹を見つけよう。</p>
-        <button class="btn btn-primary dive" id="btn-start" type="button"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#ic-play"/></svg>診断をはじめる</button>
-        <div class="cover-stats"><span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#ic-sheet"/></svg>全30問</span><i></i><span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#ic-clock"/></svg>約4分</span></div>
-      </div>
-    </div>
-    <section class="guide" id="guide" aria-labelledby="guide-title">
-      <div class="guide-head">
-        <div><p class="overline">SHARK FIELD GUIDE</p><h2 id="guide-title">サメ図鑑</h2></div>
-        <button class="browse" id="guide-all" type="button" aria-expanded="false" aria-controls="guide-grid"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#ic-grid"/></svg><span>全32タイプを見る</span></button>
-      </div>
-      <div class="guide-grid" id="guide-grid"></div>
-    </section>
+    <p class="eyebrow">SHARK ARCHETYPE</p>
+    <h1 class="start-title">サメ性格診断</h1>
+    <p class="lead">水面から深海へ。30の問いに答えながら潜っていくと、その先で、あなたに似たサメが待っています。</p>
+    <div class="start-shark" id="start-shark"></div>
+    <p><button class="btn btn-primary btn-lg" id="btn-start" type="button">潜水を始める</button></p>
+    <ul class="notes">
+      <li>全30問・およそ4分</li>
+      <li>サメは全32タイプ</li>
+      <li>回答はこの端末の中だけで処理され、どこにも送信されません</li>
+    </ul>
   </section>
 
   <!-- 質問 -->
   <section class="view view-quiz" id="v-quiz" hidden>
-    <div class="quiz-caption"><span class="overline">DIVE LOG</span><span>潜水記録</span></div>
     <div class="glass quiz-card">
       <div class="quiz-meta">
         <p class="q-count">質問 <b class="mono" id="q-num">1</b> / <span class="mono" id="q-total">30</span></p>
@@ -80,7 +62,7 @@
         <div class="options" id="options" role="group" aria-labelledby="q-text"></div>
       </div>
       <div class="quiz-foot">
-        <button class="btn btn-ghost" id="btn-back" type="button">前の質問へ</button>
+        <button class="btn btn-ghost" id="btn-back" type="button">← 前の質問へ</button>
         <span class="hint">数字キー 1〜5 でも答えられます</span>
       </div>
     </div>
@@ -145,7 +127,7 @@
     <section class="glass share" id="share" aria-labelledby="share-h" hidden>
       <h2 id="share-h">結果をシェアする</h2>
       <div class="share-buttons">
-        <a class="btn btn-share" target="_blank" rel="noopener noreferrer" id="btn-share-x"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#ic-x"/></svg> Xでシェア</a>
+        <a class="btn btn-share" target="_blank" rel="noopener noreferrer" id="btn-share-x">X でシェア</a>
         <button class="btn btn-ghost" id="btn-share-copy" type="button">リンクをコピー</button>
         <button class="btn btn-ghost" id="btn-share-image" type="button">画像を保存</button>
       </div>
@@ -159,24 +141,9 @@
 </main>
 
 <footer class="foot">
-  <p>サメ性格診断　·　SHARK ARCHETYPE</p>
+  <p>この診断は娯楽を目的としたもので、心理学的な裏付けはありません。サメと性格の対応は、生態のイメージに寄せた遊びです。</p>
 </footer>
 
-<dialog class="paper-dialog" id="guide-dialog" aria-labelledby="detail-name">
-  <button type="button" class="dialog-close" aria-label="閉じる">×</button>
-  <div id="detail-art" class="detail-art"></div>
-  <div class="dialog-copy"><p id="detail-code" class="overline"></p><h2 id="detail-name"></h2>
-    <p id="detail-persona" class="detail-persona"></p><p id="detail-eco"></p>
-    <dl class="facts"><div><dt>すむ場所</dt><dd id="detail-place"></dd></div><div><dt>大きさ</dt><dd id="detail-size"></dd></div></dl>
-  </div>
-</dialog>
-<dialog class="paper-dialog about" id="about-dialog" aria-labelledby="about-title">
-  <button type="button" class="dialog-close" aria-label="閉じる">×</button>
-  <p class="overline">ABOUT THE QUIZ</p><h2 id="about-title">診断について</h2>
-  <p>30の質問に、いまの自分にいちばん近い選択肢で答えてください。人との関わり方や動き方など、5つの傾向をもとにあなたに似たサメを見つけます。</p>
-  <h3>回答とシェアについて</h3><p>回答はブラウザー内で計算します。回答履歴は保存せず、共有リンクにはサメのタイプだけが入ります。Xでシェアするときは、投稿画面で内容を確認できます。</p>
-  <p class="small">この診断は、サメの生態をヒントにした遊びです。</p>
-</dialog>
 <p class="toast" id="toast" role="status" hidden></p>
 
 <noscript><p class="noscript">この診断は、JavaScript を有効にすると動きます。</p></noscript>
@@ -193,7 +160,6 @@
 <script src="js/share-card.js"></script>
 <script src="js/fx-sea.js"></script>
 <script src="js/fx-ui.js"></script>
-<script src="js/field-guide.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
