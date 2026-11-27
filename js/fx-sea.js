@@ -108,10 +108,8 @@
     drawParticles(dt, now);
   }
   function drawStill() { depth = target; drawCaustics(4000); drawParticles(0, 0); }
-  var active = false;
   function start() {
     cancelAnimationFrame(raf); raf = 0;
-    if (!active) return;
     if (reduced() || document.hidden) { drawStill(); return; }
     prev = performance.now();
     raf = requestAnimationFrame(frame);
@@ -122,14 +120,14 @@
     var c = colorsAt(target);
     root.style.setProperty("--sea-a", c.a);
     root.style.setProperty("--sea-b", c.b);
-    if (active && !raf) drawStill();
+    if (!raf) drawStill();
   }
 
-  window.addEventListener("resize", function () { resize(); if (active && !raf) drawStill(); });
+  window.addEventListener("resize", function () { resize(); if (!raf) drawStill(); });
   document.addEventListener("visibilitychange", start); // 見えていない間は止める
   if (mq && mq.addEventListener) mq.addEventListener("change", start);
 
   resize();
   start();
-  SA.sea = { setDepth: setDepth, setActive: function (on) { active = on; start(); } };
+  SA.sea = { setDepth: setDepth };
 })();
